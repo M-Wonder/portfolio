@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Moses Wonder — Backend Developer & Cybersecurity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #040d0c; --surface: #0a1a18; --surface2: #0f2420;
+      --teal: #00e5c8; --teal-dim: #00b4a0; --teal-glow: rgba(0,229,200,0.10);
+      --gold: #f0b429; --text: #e8f4f2; --muted: #7aada6;
+      --faint: #2a4442; --border: rgba(0,229,200,0.15);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:9999; opacity:0.35; }
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.2rem 4rem; background:rgba(4,13,12,0.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+    .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:0.08em; color:var(--teal); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { text-decoration:none; font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--teal); }
+    .hero { min-height:100vh; display:flex; align-items:center; padding:8rem 4rem 4rem; position:relative; overflow:hidden; }
+    .hero-grid-bg { position:absolute; inset:0; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%); }
+    .hero-glow { position:absolute; top:20%; right:-10%; width:600px; height:600px; background:radial-gradient(circle, rgba(0,229,200,0.08) 0%, transparent 70%); border-radius:50%; pointer-events:none; }
+    .hero-content { position:relative; max-width:900px; }
+    .hero-tag { display:inline-flex; align-items:center; gap:0.5rem; font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--teal); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem; opacity:0; animation:fadeUp 0.6s ease forwards 0.1s; }
+    .hero-tag::before { content:''; width:24px; height:1px; background:var(--teal); }
+    h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(3rem,7vw,6.5rem); line-height:0.95; letter-spacing:-0.02em; margin-bottom:1.5rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.2s; }
+    h1 .name-teal { color:var(--teal); }
+    h1 .name-dim { color:var(--muted); }
+    .hero-desc { font-size:1.1rem; color:var(--muted); max-width:560px; line-height:1.7; margin-bottom:2.5rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.35s; }
+    .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s ease forwards 0.5s; }
+    .btn-primary { display:inline-block; padding:0.85rem 2rem; background:var(--teal); color:var(--bg); font-family:'Syne',sans-serif; font-weight:700; font-size:0.85rem; letter-spacing:0.06em; text-decoration:none; text-transform:uppercase; transition:all 0.25s; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
+    .btn-primary:hover { background:#fff; transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,229,200,0.25); }
+    .btn-outline { display:inline-block; padding:0.85rem 2rem; border:1px solid var(--border); color:var(--muted); font-family:'DM Mono',monospace; font-size:0.8rem; letter-spacing:0.06em; text-decoration:none; text-transform:uppercase; transition:all 0.25s; }
+    .btn-outline:hover { border-color:var(--teal); color:var(--teal); }
+    .hero-stats { position:absolute; right:4rem; bottom:4rem; display:flex; gap:3rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.65s; }
+    .stat-item { text-align:right; }
+    .stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:2.2rem; color:var(--teal); line-height:1; }
+    .stat-label { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; }
+    section { padding:6rem 4rem; max-width:1200px; margin:0 auto; }
+    .section-label { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--teal); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.75rem; }
+    .section-label::after { content:''; flex:1; max-width:48px; height:1px; background:var(--teal); }
+    .section-title { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.8rem,3.5vw,2.8rem); letter-spacing:-0.02em; margin-bottom:3rem; line-height:1.1; }
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+    .about-text p { color:var(--muted); margin-bottom:1rem; line-height:1.75; }
+    .about-text p strong { color:var(--text); }
+    .about-cards { display:flex; flex-direction:column; gap:1rem; }
+    .cert-card { background:var(--surface); border:1px solid var(--border); padding:1.25rem 1.5rem; position:relative; overflow:hidden; transition:border-color 0.25s, transform 0.25s; }
+    .cert-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--teal); }
+    .cert-card:hover { border-color:var(--teal-dim); transform:translateX(4px); }
+    .cert-org { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--teal); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.25rem; }
+    .cert-title { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; color:var(--text); margin-bottom:0.2rem; }
+    .cert-date { font-size:0.78rem; color:var(--muted); }
+    .skills-section { background:var(--surface); }
+    .skills-wrapper { max-width:1200px; margin:0 auto; padding:6rem 4rem; }
+    .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+    .skill-group { background:var(--bg); border:1px solid var(--border); padding:1.75rem; transition:border-color 0.3s; }
+    .skill-group:hover { border-color:var(--teal-dim); }
+    .skill-group-icon { font-size:1.5rem; margin-bottom:0.75rem; }
+    .skill-group-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--text); margin-bottom:1rem; letter-spacing:0.03em; }
+    .skill-tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
+    .skill-tag { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); background:var(--surface); border:1px solid var(--faint); padding:0.25rem 0.6rem; letter-spacing:0.03em; transition:all 0.2s; }
+    .skill-tag:hover { background:var(--teal-glow); border-color:var(--teal); color:var(--teal); }
+    .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:1.5rem; }
+    .project-card { background:var(--surface); border:1px solid var(--border); padding:2rem; position:relative; overflow:hidden; transition:all 0.3s; text-decoration:none; display:block; color:inherit; }
+    .project-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--teal-glow) 0%,transparent 60%); opacity:0; transition:opacity 0.3s; }
+    .project-card:hover { border-color:var(--teal-dim); transform:translateY(-4px); box-shadow:0 20px 48px rgba(0,0,0,0.4); }
+    .project-card:hover::after { opacity:1; }
+    .project-lang { display:inline-block; font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--teal); background:var(--teal-glow); border:1px solid rgba(0,229,200,0.2); padding:0.2rem 0.6rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; }
+    .project-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1.15rem; color:var(--text); margin-bottom:0.5rem; letter-spacing:-0.01em; }
+    .project-desc { font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:1.25rem; }
+    .project-footer { display:flex; justify-content:space-between; align-items:center; font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--faint); }
+    .project-stars { color:var(--gold); }
+    .project-arrow { font-size:1rem; color:var(--teal); transition:transform 0.2s; }
+    .project-card:hover .project-arrow { transform:translate(4px,-4px); }
+    .contact-section { background:var(--surface); }
+    .contact-wrapper { max-width:1200px; margin:0 auto; padding:6rem 4rem; }
+    .contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .contact-big { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(2.5rem,5vw,4.5rem); line-height:0.95; letter-spacing:-0.03em; }
+    .contact-big span { color:var(--teal); }
+    .contact-links { display:flex; flex-direction:column; gap:1.2rem; }
+    .contact-link { display:flex; align-items:center; gap:1rem; text-decoration:none; padding:1rem 1.25rem; border:1px solid var(--border); transition:all 0.25s; }
+    .contact-link:hover { border-color:var(--teal); background:var(--teal-glow); transform:translateX(6px); }
+    .contact-link-icon { font-size:1.1rem; width:2rem; text-align:center; }
+    .contact-link-info { flex:1; }
+    .contact-link-label { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.1rem; }
+    .contact-link-value { font-size:0.9rem; color:var(--text); }
+    .contact-link-arrow { color:var(--teal); opacity:0; transition:opacity 0.2s; }
+    .contact-link:hover .contact-link-arrow { opacity:1; }
+    footer { border-top:1px solid var(--border); padding:2rem 4rem; display:flex; justify-content:space-between; align-items:center; }
+    .footer-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.85rem; color:var(--muted); }
+    .footer-copy { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--faint); letter-spacing:0.06em; }
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } from { opacity:0; transform:translateY(20px); } }
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--faint); border-radius:3px; }
+    ::-webkit-scrollbar-thumb:hover { background:var(--teal-dim); }
+    @media(max-width:768px) {
+      nav { padding:1rem 1.5rem; } .nav-links { display:none; }
+      .hero { padding:7rem 1.5rem 3rem; }
+      .hero-stats { position:static; margin-top:3rem; justify-content:flex-start; gap:2rem; }
+      section { padding:4rem 1.5rem; }
+      .about-grid, .contact-inner { grid-template-columns:1fr; gap:2rem; }
+      .skills-wrapper, .contact-wrapper { padding:4rem 1.5rem; }
+      footer { padding:1.5rem; flex-direction:column; gap:0.5rem; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">MW</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for remote work · Nairobi, Kenya</div>
+    <h1><span class="name-dim">Moses</span><br><span class="name-teal">Wonder</span></h1>
+    <p class="hero-desc">Backend Developer · Cybersecurity Specialist · Telecom Engineer. Building secure, scalable systems from Nairobi — open to remote opportunities worldwide.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">17</div><div class="stat-label">Repos</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">ALX Certs</div></div>
+    <div class="stat-item"><div class="stat-num">4+</div><div class="stat-label">Languages</div></div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="section-label">01 — About</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm <strong>Moses Wonder</strong>, a backend developer and cybersecurity enthusiast pursuing a <strong>B.Sc. in Telecommunications and Information Technology</strong> at Kenyatta University, Nairobi.</p>
+      <p>My background sits at a rare intersection — I understand how software is built, how networks carry data, and how systems can be secured or compromised. This gives me a perspective that pure developers or pure network engineers typically don't have.</p>
+      <p>I've built backend APIs, worked with relational databases, administered Linux servers, and reviewed AI-generated codebases for security flaws and architectural issues.</p>
+      <p>Currently pursuing <strong>CCNA</strong> and <strong>CompTIA Security+</strong> to deepen my networking and cybersecurity credentials.</p>
+    </div>
+    <div class="about-cards reveal">
+      <div class="cert-card">
+        <div class="cert-org">ALX Africa</div>
+        <div class="cert-title">ProDev Backend — Software Engineering</div>
+        <div class="cert-date">Completed December 2025 · 4-Month Programme</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-org">ALX Africa</div>
+        <div class="cert-title">Professional Foundations — Digital Skills</div>
+        <div class="cert-date">Completed August 2025</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-org">Kenyatta University</div>
+        <div class="cert-title">B.Sc. Telecommunications & Information Technology</div>
+        <div class="cert-date">2023 – Present · In Progress</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="skills-section" id="skills">
+  <div class="skills-wrapper">
+    <div class="section-label">02 — Skills</div>
+    <h2 class="section-title">What I Work With</h2>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">⚙️</div>
+        <div class="skill-group-name">Backend Development</div>
+        <div class="skill-tags"><span class="skill-tag">Python</span><span class="skill-tag">REST APIs</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Django</span><span class="skill-tag">JWT Auth</span><span class="skill-tag">ORM</span></div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">🛡️</div>
+        <div class="skill-group-name">Cybersecurity</div>
+        <div class="skill-tags"><span class="skill-tag">Secure Coding</span><span class="skill-tag">Threat Analysis</span><span class="skill-tag">Vulnerability Assessment</span><span class="skill-tag">OWASP</span></div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">🌐</div>
+        <div class="skill-group-name">Networking & Telecom</div>
+        <div class="skill-tags"><span class="skill-tag">TCP/IP</span><span class="skill-tag">Subnetting</span><span class="skill-tag">VLANs</span><span class="skill-tag">Routing Protocols</span><span class="skill-tag">OSI Model</span></div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">🖥️</div>
+        <div class="skill-group-name">Systems & DevOps</div>
+        <div class="skill-tags"><span class="skill-tag">Linux</span><span class="skill-tag">Bash</span><span class="skill-tag">Shell</span><span class="skill-tag">Git/GitHub</span><span class="skill-tag">Docker</span><span class="skill-tag">SSH</span></div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">☁️</div>
+        <div class="skill-group-name">Cloud & Tools</div>
+        <div class="skill-tags"><span class="skill-tag">AWS</span><span class="skill-tag">Railway</span><span class="skill-tag">Postman</span><span class="skill-tag">VS Code</span><span class="skill-tag">Notion</span></div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-icon">🤖</div>
+        <div class="skill-group-name">AI Code Review</div>
+        <div class="skill-tags"><span class="skill-tag">Code Auditing</span><span class="skill-tag">Bug Identification</span><span class="skill-tag">Security Review</span><span class="skill-tag">Technical Writing</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="projects">
+  <div class="section-label">03 — Projects</div>
+  <h2 class="section-title">Things I've Built</h2>
+  <div class="projects-grid">
+    <a href="https://github.com/M-Wonder/Newsroom-OS" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">Python</div>
+      <div class="project-name">Newsroom-OS</div>
+      <div class="project-desc">An operating system-level newsroom management tool built in Python. Demonstrates systems thinking and backend logic for content workflow management.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span class="project-stars">★ 1</span><span class="project-arrow">↗</span></div>
+    </a>
+    <a href="https://github.com/M-Wonder/alx-airbnb-database" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">SQL · PostgreSQL</div>
+      <div class="project-name">Airbnb Database Clone</div>
+      <div class="project-desc">Full relational database design for an Airbnb-style platform — schema design, normalization, indexing, and complex queries. Built during ALX ProDev Backend.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span class="project-stars">★ 2</span><span class="project-arrow">↗</span></div>
+    </a>
+    <a href="https://github.com/M-Wonder/alx_travel_app_0x00" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">Python · Django</div>
+      <div class="project-name">Travel App API</div>
+      <div class="project-desc">Django-based travel application backend with full CRUD operations, model relationships, and REST API design patterns. Template-grade production structure.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span>Template Project</span><span class="project-arrow">↗</span></div>
+    </a>
+    <a href="https://github.com/M-Wonder/alx-backend-python" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">Python</div>
+      <div class="project-name">Backend Python Mastery</div>
+      <div class="project-desc">Advanced Python backend concepts — async programming, type annotations, unit testing, and performance optimization patterns from the ALX curriculum.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span>ALX ProDev</span><span class="project-arrow">↗</span></div>
+    </a>
+    <a href="https://github.com/M-Wonder/ALXprodev-Devops" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">Shell · DevOps</div>
+      <div class="project-name">DevOps Foundations</div>
+      <div class="project-desc">Shell scripting, server automation, and DevOps tooling. Covers CI/CD concepts, Linux administration, and deployment pipeline fundamentals.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span>Shell · Bash</span><span class="project-arrow">↗</span></div>
+    </a>
+    <a href="https://github.com/M-Wonder/alx-airbnb-project-documentation" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="project-lang">Documentation</div>
+      <div class="project-name">System Architecture Docs</div>
+      <div class="project-desc">Comprehensive project documentation — architecture diagrams, API specifications, ERD diagrams, and technical writing for a production backend system.</div>
+      <div class="project-footer"><span>github.com/M-Wonder</span><span>Technical Writing</span><span class="project-arrow">↗</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="contact-section" id="contact">
+  <div class="contact-wrapper">
+    <div class="section-label">04 — Contact</div>
+    <div class="contact-inner">
+      <div class="reveal">
+        <p class="contact-big">Let's<br><span>work</span><br>together.</p>
+        <p style="color:var(--muted);margin-top:1.5rem;font-size:0.95rem;line-height:1.7;">Open to remote roles in backend development, cybersecurity, AI code review, and sysadmin. Available across East African and European time zones.</p>
+      </div>
+      <div class="contact-links reveal">
+        <a href="mailto:mybwndr17@gmail.com" class="contact-link">
+          <div class="contact-link-icon">✉</div>
+          <div class="contact-link-info"><div class="contact-link-label">Email</div><div class="contact-link-value">mybwndr17@gmail.com</div></div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="https://github.com/M-Wonder" target="_blank" rel="noopener" class="contact-link">
+          <div class="contact-link-icon">⌥</div>
+          <div class="contact-link-info"><div class="contact-link-label">GitHub</div><div class="contact-link-value">github.com/M-Wonder</div></div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="https://x.com/wndr_mayabi" target="_blank" rel="noopener" class="contact-link">
+          <div class="contact-link-icon">✕</div>
+          <div class="contact-link-info"><div class="contact-link-label">X / Twitter</div><div class="contact-link-value">@wndr_mayabi</div></div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="https://www.instagram.com/one_mayabi/" target="_blank" rel="noopener" class="contact-link">
+          <div class="contact-link-icon">◎</div>
+          <div class="contact-link-info"><div class="contact-link-label">Instagram</div><div class="contact-link-value">@one_mayabi</div></div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-name">Moses Wonder — Nairobi, Kenya</div>
+  <div class="footer-copy">© 2026 · Built with HTML/CSS/JS · Deployed on Railway</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    document.querySelectorAll('[id]').forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--teal)' : '';
+    });
+  });
+</script>
+</body>
+</html>
